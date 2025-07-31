@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Homepage from "./components/Home";
-import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import Contact from "./components/Contact";
 
 const App = () => {
   return (

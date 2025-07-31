@@ -1,4 +1,3 @@
-// src/components/ContactPage.jsx
 import React from "react";
 import { motion } from "framer-motion";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
