@@ -1,3 +1,4 @@
+// Updated ReAiSol Homepage
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain, Users, Briefcase, Rocket, Menu, X, MessageCircle } from "lucide-react";
@@ -36,6 +37,29 @@ const prebuiltPrompts = [
   "How can I get a quote?",
   "Tell me about your AI solutions.",
   "How fast can you deliver a project?",
+];
+
+const extraServices = [
+  {
+    icon: <Brain className="w-7 h-7 text-blue-500" />,
+    title: "Custom Software",
+    desc: "Tailored solutions for your business needs, from automation to analytics.",
+  },
+  {
+    icon: <Rocket className="w-7 h-7 text-pink-500" />,
+    title: "Startup MVPs",
+    desc: "Rapid prototyping and launch for new ideas and products.",
+  },
+  {
+    icon: <Briefcase className="w-7 h-7 text-indigo-500" />,
+    title: "Consulting",
+    desc: "Expert advice on tech stack, scaling, and digital transformation.",
+  },
+  {
+    icon: <Users className="w-7 h-7 text-green-500" />,
+    title: "Team Augmentation",
+    desc: "Boost your team with our skilled developers and designers.",
+  },
 ];
 
 const HomePage = () => {
@@ -133,7 +157,6 @@ const HomePage = () => {
 
       {/* Floating Buttons Container */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-4">
-        {/* Contact Us Button */}
         <motion.button onClick={() => navigate("/contact")} initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 60, delay: 1 }} className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-3 rounded-full shadow-lg hover:from-blue-600 hover:to-indigo-700 transition">
           Contact Us
         </motion.button>
@@ -195,8 +218,21 @@ const HomePage = () => {
         </motion.div>
       )}
 
-      {/* Hero Section */}
-      <section className="pt-36 md:pt-44 text-center px-4 md:px-6">
+      {/* Hero Section with animated background shapes */}
+      <section className="pt-36 md:pt-44 text-center px-4 md:px-6 relative overflow-hidden">
+        {/* Animated floating shapes */}
+        <motion.div
+          className="absolute top-0 left-0 w-64 h-64 bg-blue-300/30 rounded-full blur-3xl -z-10"
+          initial={{ scale: 0.7, opacity: 0.5 }}
+          animate={{ scale: 1, opacity: 0.8 }}
+          transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+        />
+        <motion.div
+          className="absolute bottom-0 right-0 w-48 h-48 bg-pink-400/20 rounded-full blur-2xl -z-10"
+          initial={{ scale: 0.7, opacity: 0.5 }}
+          animate={{ scale: 1.1, opacity: 0.7 }}
+          transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse" }}
+        />
         <motion.div
           variants={zoomInVariant}
           initial="hidden"
@@ -221,18 +257,60 @@ const HomePage = () => {
           <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
             ReAiSol is a cutting-edge startup building affordable digital solutions using modern technologies like React, Next.js, and AI.
           </p>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-col md:flex-row justify-center gap-4">
             <button
               onClick={() => navigate("/contact")}
               className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:bg-blue-700 transition duration-300"
             >
               Get Started
             </button>
+            <button
+              onClick={() => navigate("/services")}
+              className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl shadow-lg hover:bg-blue-100 transition duration-300 border border-blue-200"
+            >
+              Explore Services
+            </button>
           </div>
         </motion.div>
+        {/* Quick stats */}
+        <div className="mt-12 flex flex-wrap justify-center gap-8">
+          <motion.div
+            className="bg-white rounded-xl shadow p-6 flex flex-col items-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <Users className="w-8 h-8 text-blue-600 mb-2" />
+            <span className="text-3xl font-bold text-blue-600"><CountUp end={120} duration={2} />+</span>
+            <span className="text-gray-600 font-medium">Happy Clients</span>
+          </motion.div>
+          <motion.div
+            className="bg-white rounded-xl shadow p-6 flex flex-col items-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <Briefcase className="w-8 h-8 text-indigo-600 mb-2" />
+            <span className="text-3xl font-bold text-indigo-600"><CountUp end={85} duration={2} />+</span>
+            <span className="text-gray-600 font-medium">Projects</span>
+          </motion.div>
+          <motion.div
+            className="bg-white rounded-xl shadow p-6 flex flex-col items-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+          >
+            <Rocket className="w-8 h-8 text-pink-600 mb-2" />
+            <span className="text-3xl font-bold text-pink-600"><CountUp end={4} duration={2} />+</span>
+            <span className="text-gray-600 font-medium">Years Experience</span>
+          </motion.div>
+        </div>
       </section>
 
-      {/* Services Section */}
+      {/* Services Section - Expanded */}
       <motion.section
         id="services"
         className="mt-28 px-4 md:px-6 max-w-6xl mx-auto text-center"
@@ -245,28 +323,92 @@ const HomePage = () => {
         <p className="text-gray-600 max-w-2xl mx-auto mb-10">
           We specialize in delivering efficient, scalable, and intelligent solutions that empower businesses in the digital era.
         </p>
-        <div className="grid md:grid-cols-3 gap-6">
-          {["Web Development", "Mobile Apps", "AI Integration"].map((title, i) => (
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
+          {[
+            {
+              title: "Web Development",
+              desc: "Responsive websites using React, Vite & Tailwind. Modern, fast, and SEO-friendly.",
+              icon: <Brain className="w-8 h-8 text-blue-600 mx-auto mb-2" />,
+            },
+            {
+              title: "Mobile Apps",
+              desc: "Cross-platform apps for Android and iOS. Beautiful UI, robust performance.",
+              icon: <Rocket className="w-8 h-8 text-pink-600 mx-auto mb-2" />,
+            },
+            {
+              title: "AI Integration",
+              desc: "Integrate GPT, Gemini, and AI features seamlessly. Automate, analyze, and personalize.",
+              icon: <MessageCircle className="w-8 h-8 text-indigo-600 mx-auto mb-2" />,
+            },
+          ].map((service, i) => (
             <motion.div
-              key={title}
-              className="p-6 bg-white rounded-2xl shadow-md hover:shadow-2xl transition"
-              whileHover={{ scale: 1.03 }}
+              key={service.title}
+              className="p-6 bg-white rounded-2xl shadow-md hover:shadow-2xl transition flex flex-col items-center"
+              whileHover={{ scale: 1.05 }}
               variants={fadeInUp}
               custom={i + 1}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <h3 className="text-xl font-semibold text-blue-600 mb-2">{title}</h3>
-              <p className="text-gray-600">
-                {title === "Web Development"
-                  ? "Responsive websites using React, Vite & Tailwind."
-                  : title === "Mobile Apps"
-                  ? "Cross-platform apps for Android and iOS."
-                  : "Integrate GPT, Gemini, and AI features seamlessly."}
-              </p>
+              {service.icon}
+              <h3 className="text-xl font-semibold text-blue-600 mb-2">{service.title}</h3>
+              <p className="text-gray-600">{service.desc}</p>
             </motion.div>
           ))}
+        </div>
+        {/* Extra Services */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          {extraServices.map((service, i) => (
+            <motion.div
+              key={service.title}
+              className="p-5 bg-white rounded-xl shadow hover:shadow-xl transition flex flex-col items-center"
+              whileHover={{ scale: 1.07, backgroundColor: "#f0f6ff" }}
+              variants={fadeInUp}
+              custom={i + 1}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              {service.icon}
+              <h4 className="text-lg font-semibold text-blue-600 mb-1">{service.title}</h4>
+              <p className="text-gray-600 text-sm">{service.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+        <div className="grid md:grid-cols-2 gap-8">
+          <motion.div
+            className="bg-blue-50 rounded-xl p-6 shadow border border-blue-100"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <h4 className="text-lg font-bold text-blue-700 mb-2">Why Choose Us?</h4>
+            <ul className="text-gray-700 text-base space-y-2 text-left mx-auto max-w-md">
+              <li>✅ Fast, reliable delivery</li>
+              <li>✅ Collaborative approach</li>
+              <li>✅ Innovative tech stack</li>
+              <li>✅ Security-first mindset</li>
+              <li>✅ Global support & scalability</li>
+            </ul>
+          </motion.div>
+          <motion.div
+            className="bg-pink-50 rounded-xl p-6 shadow border border-pink-100"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <h4 className="text-lg font-bold text-pink-700 mb-2">How We Work</h4>
+            <ul className="text-gray-700 text-base space-y-2 text-left mx-auto max-w-md">
+              <li>1️⃣ Discovery & Strategy</li>
+              <li>2️⃣ Design & Prototyping</li>
+              <li>3️⃣ Agile Development</li>
+              <li>4️⃣ Testing & QA</li>
+              <li>5️⃣ Launch & Support</li>
+            </ul>
+          </motion.div>
         </div>
       </motion.section>
 
@@ -310,6 +452,27 @@ const HomePage = () => {
             </motion.div>
           ))}
         </div>
+        {/* Our Mission & Vision */}
+        <motion.div
+          className="mt-16 grid md:grid-cols-2 gap-8"
+          initial="hidden"
+          whileInView="visible"
+          variants={fadeInUp}
+          viewport={{ once: true }}
+        >
+          <div className="bg-blue-50 rounded-xl p-6 shadow border border-blue-100">
+            <h4 className="text-lg font-bold text-blue-700 mb-2">Our Mission</h4>
+            <p className="text-gray-700 text-base">
+              To empower businesses of all sizes with affordable, innovative, and scalable digital solutions that drive growth and success.
+            </p>
+          </div>
+          <div className="bg-pink-50 rounded-xl p-6 shadow border border-pink-100">
+            <h4 className="text-lg font-bold text-pink-700 mb-2">Our Vision</h4>
+            <p className="text-gray-700 text-base">
+              To be a global leader in digital transformation, blending creativity and technology for a smarter future.
+            </p>
+          </div>
+        </motion.div>
       </motion.section>
 
       {/* Company Growth Section */}
@@ -342,6 +505,22 @@ const HomePage = () => {
             </motion.div>
           ))}
         </div>
+        {/* Growth Timeline */}
+        <motion.div
+          className="mt-16"
+          initial="hidden"
+          whileInView="visible"
+          variants={fadeInUp}
+          viewport={{ once: true }}
+        >
+          <h4 className="text-xl font-bold text-blue-700 mb-4">Our Journey</h4>
+          <ul className="flex flex-col md:flex-row justify-center items-center gap-6">
+            <li className="bg-white rounded-xl shadow px-6 py-4 text-blue-600 font-semibold">2021: Founded</li>
+            <li className="bg-white rounded-xl shadow px-6 py-4 text-indigo-600 font-semibold">2022: 50+ Projects Delivered</li>
+            <li className="bg-white rounded-xl shadow px-6 py-4 text-pink-600 font-semibold">2023: AI Integration Launched</li>
+            <li className="bg-white rounded-xl shadow px-6 py-4 text-blue-600 font-semibold">2024: Global Expansion</li>
+          </ul>
+        </motion.div>
       </motion.section>
 
       {/* Testimonials */}
@@ -374,6 +553,10 @@ const HomePage = () => {
               <h4 className="font-semibold text-blue-600">{name}</h4>
             </motion.div>
           ))}
+        </div>
+        {/* Add a call for more testimonials */}
+        <div className="mt-10">
+          <span className="text-gray-500">Want to share your experience? <button onClick={() => navigate("/contact")} className="text-blue-600 underline hover:text-indigo-600">Contact us</button></span>
         </div>
       </motion.section>
 
