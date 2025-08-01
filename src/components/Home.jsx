@@ -1,6 +1,6 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { Brain, Users, Briefcase, Rocket } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Brain, Users, Briefcase, Rocket, Menu, X, MessageCircle } from "lucide-react";
 import Typewriter from "typewriter-effect";
 import { useNavigate } from "react-router-dom";
 import CountUp from "react-countup";
@@ -31,35 +31,157 @@ const zoomInVariant = {
   },
 };
 
+const prebuiltPrompts = [
+  "What services do you offer?",
+  "How can I get a quote?",
+  "Tell me about your AI solutions.",
+  "How fast can you deliver a project?",
+];
+
 const HomePage = () => {
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    { from: "bot", text: "👋 Hi! How can we help you today?" }
+  ]);
+  const [chatInput, setChatInput] = useState("");
+  const [botTyping, setBotTyping] = useState(false);
+  const chatEndRef = useRef(null);
+
+  // Auto-scroll chat to bottom
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMessages, botTyping]);
+
+  // Enhanced send handler with typing indicator
+  const handleSend = () => {
+    if (chatInput.trim()) {
+      setChatMessages([...chatMessages, { from: "user", text: chatInput }]);
+      setBotTyping(true);
+      setTimeout(() => {
+        setChatMessages(msgs => [
+          ...msgs,
+          { from: "bot", text: "🤖 Thanks for your message! We'll get back to you soon." }
+        ]);
+        setBotTyping(false);
+      }, 1200);
+      setChatInput("");
+    }
+  };
+
+  // When a prompt is clicked, send it as a message
+  const handlePromptClick = (prompt) => {
+    setChatInput("");
+    setChatMessages([...chatMessages, { from: "user", text: prompt }]);
+    setBotTyping(true);
+    setTimeout(() => {
+      setChatMessages(msgs => [
+        ...msgs,
+        { from: "bot", text: "🤖 Here's more info: " + prompt }
+      ]);
+      setBotTyping(false);
+    }, 1200);
+  };
 
   return (
-    <div className="min-h-screen overflow-x-hidden scroll-smooth bg-gradient-to-br from-white via-blue-50 to-blue-100 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-blue-100 font-sans overflow-x-hidden scroll-smooth">
       {/* Navbar */}
-      <motion.nav
-        className="fixed top-0 left-0 w-full bg-white shadow-md z-50 backdrop-blur-md"
-        initial={{ y: -80 }}
-        animate={{ y: 0 }}
-        transition={{ type: "spring", stiffness: 80 }}
-      >
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2 text-blue-600 text-2xl font-extrabold tracking-tight">
-            <Brain className="w-7 h-7 animate-spin-slow" />
-            ReAiSol
-          </div>
-          <div className="hidden md:flex space-x-8 text-gray-700 font-medium">
-            <a href="#services" className="hover:text-blue-600 transition">Services</a>
-            <a href="#about" className="hover:text-blue-600 transition">About</a>
-            <button onClick={() => navigate("/contact")} className="hover:text-blue-600 transition">
-              Contact
-            </button>
-          </div>
+      <motion.nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[90%] md:w-[85%] lg:w-[70%] bg-white/80 backdrop-blur-md shadow-xl z-50 rounded-full px-6 py-3 flex items-center justify-between transition-all duration-500" initial={{ y: -100 }} animate={{ y: 0 }} transition={{ type: "spring", stiffness: 80 }}>
+        <div className="flex items-center gap-2 text-blue-600 text-xl font-extrabold tracking-tight">
+          <Brain className="w-6 h-6 animate-spin-slow" />
+          ReAiSol
+        </div>
+        <div className="hidden md:flex items-center space-x-6 text-gray-700 font-medium">
+          <a onClick={()=>navigate("/services")} className="hover:text-blue-600 transition">Services</a>
+          <a onClick={()=>navigate("/about")} className="hover:text-blue-600 transition">About</a>
+          <button onClick={() => navigate("/contact")} className="hover:text-blue-600 transition">Contact</button>
+        </div>
+        <div className="md:hidden">
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-blue-600">
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </motion.nav>
 
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="fixed top-20 left-1/2 -translate-x-1/2 w-[85%] bg-white rounded-xl shadow-md py-4 px-6 z-40 text-center space-y-4 text-gray-800 font-medium">
+            <a href="#services" className="block hover:text-blue-600" onClick={() => setMobileMenuOpen(false)}>Services</a>
+            <a href="#about" className="block hover:text-blue-600" onClick={() => setMobileMenuOpen(false)}>About</a>
+            <button onClick={() => { setMobileMenuOpen(false); navigate("/contact"); }} className="block w-full text-left hover:text-blue-600">Contact</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Buttons Container */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-4">
+        {/* Contact Us Button */}
+        <motion.button onClick={() => navigate("/contact")} initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 60, delay: 1 }} className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-3 rounded-full shadow-lg hover:from-blue-600 hover:to-indigo-700 transition">
+          Contact Us
+        </motion.button>
+
+        {/* Chat Button */}
+        {!chatOpen && (
+          <motion.button onClick={() => setChatOpen(true)} initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 60, delay: 1.2 }} className="bg-gradient-to-r from-pink-500 to-purple-600 text-white p-4 rounded-full shadow-lg hover:from-pink-600 hover:to-purple-700 transition flex items-center">
+            <MessageCircle className="w-6 h-6" />
+          </motion.button>
+        )}
+      </div>
+
+      {/* Chatbox */}
+      {chatOpen && (
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="fixed bottom-24 right-6 z-50 w-80 bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-blue-100 flex flex-col">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-blue-100 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-2xl">
+            <span className="font-bold text-white">Chat with ReAiSol</span>
+            <button onClick={() => setChatOpen(false)} className="text-white hover:text-gray-200" aria-label="Close chat">×</button>
+          </div>
+          <div className="flex-1 px-4 py-3 space-y-2 overflow-y-auto max-h-64">
+            {chatMessages.map((msg, i) => (
+              <div key={i} className={`text-sm ${msg.from === "bot" ? "text-blue-600" : "text-gray-800 text-right"}`}>{msg.text}</div>
+            ))}
+            {botTyping && (
+              <div className="text-blue-600 text-sm flex items-center gap-2">
+                <span className="animate-bounce">...</span>
+                <span>ReAiSol is typing</span>
+              </div>
+            )}
+            <div ref={chatEndRef} />
+          </div>
+          {/* Prebuilt Prompts */}
+          <div className="px-4 py-2 border-t border-blue-100 bg-white flex flex-wrap gap-2">
+            {prebuiltPrompts.map((prompt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handlePromptClick(prompt)}
+                className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 px-3 py-1 rounded-full text-xs font-medium hover:from-blue-200 hover:to-blue-300 transition"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+          {/* Input */}
+          <div className="px-4 py-3 border-t border-blue-100 bg-white rounded-b-2xl flex gap-2">
+            <input
+              type="text"
+              value={chatInput}
+              onChange={e => setChatInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleSend()}
+              placeholder="Type your message..."
+              className={`flex-1 px-3 py-2 rounded-lg border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 ${chatInput ? "bg-white text-gray-800" : "bg-transparent text-transparent"}`}
+              style={{ transition: "background 0.2s, color 0.2s" }}
+            />
+            <button onClick={handleSend} className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition">
+              Send
+            </button>
+          </div>
+        </motion.div>
+      )}
+
       {/* Hero Section */}
-      <section className="pt-32 md:pt-40 text-center px-4 md:px-6">
+      <section className="pt-36 md:pt-44 text-center px-4 md:px-6">
         <motion.div
           variants={zoomInVariant}
           initial="hidden"
@@ -207,7 +329,7 @@ const HomePage = () => {
         </div>
       </motion.section>
 
-      {/* Testimonials Section */}
+      {/* Testimonials */}
       <motion.section
         className="mt-28 px-4 md:px-6 max-w-6xl mx-auto text-center"
         variants={zoomInVariant}
@@ -248,12 +370,12 @@ const HomePage = () => {
         whileInView="visible"
         viewport={{ once: true }}
       >
-        <div className="bg-blue-600 text-white py-12 px-6 rounded-2xl max-w-4xl mx-auto shadow-lg">
+        <div className="bg-blue-600 text-white py-12 px-8 rounded-3xl max-w-4xl mx-auto shadow-xl">
           <h2 className="text-3xl font-bold mb-4">Ready to build something great?</h2>
           <p className="mb-6">Let’s talk and bring your vision to life — websites, apps, and AI solutions await!</p>
           <button
             onClick={() => navigate("/contact")}
-            className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl shadow hover:bg-gray-100 transition"
+            className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-2xl shadow hover:bg-gray-100 transition"
           >
             Contact Us
           </button>
