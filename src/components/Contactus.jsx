@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
-const Contact = () => {
+const Contactus = () => {
   return (
     <section
       id="contact"
@@ -103,4 +103,4 @@ const Contact = () => {
   );
 };
 
-export default Contact;
+export default Contactus;
