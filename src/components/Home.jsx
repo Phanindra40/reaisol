@@ -109,9 +109,24 @@ const HomePage = () => {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="fixed top-20 left-1/2 -translate-x-1/2 w-[85%] bg-white rounded-xl shadow-md py-4 px-6 z-40 text-center space-y-4 text-gray-800 font-medium">
-            <a href="#services" className="block hover:text-blue-600" onClick={() => setMobileMenuOpen(false)}>Services</a>
-            <a href="#about" className="block hover:text-blue-600" onClick={() => setMobileMenuOpen(false)}>About</a>
-            <button onClick={() => { setMobileMenuOpen(false); navigate("/contact"); }} className="block w-full text-left hover:text-blue-600">Contact</button>
+            <button
+              onClick={() => { setMobileMenuOpen(false); navigate("/services"); }}
+              className="block w-full text-left hover:text-blue-600"
+            >
+              Services
+            </button>
+            <button
+              onClick={() => { setMobileMenuOpen(false); navigate("/about"); }}
+              className="block w-full text-left hover:text-blue-600"
+            >
+              About
+            </button>
+            <button
+              onClick={() => { setMobileMenuOpen(false); navigate("/contact"); }}
+              className="block w-full text-left hover:text-blue-600"
+            >
+              Contact
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
